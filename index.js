@@ -18,6 +18,9 @@ const cleanObject = (obj) =>
       ([_, v]) => v !== undefined && v !== null && v !== ""
     )
   );
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 
 // ------------------ Admin Register ------------------
 app.post("/api/admin/register", async (req, res) => {
@@ -127,6 +130,23 @@ app.post("/api/admin/login", async (req, res) => {
     });
   }
 });
+
+app.get("/api/admin/getAdmin", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM admin");
+    res.status(200).json({
+      success: true,
+      message: "Contacts fetched successfully",
+      admins: rows,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
+  }
+})
 
 // ------------------ Create Contact ------------------
 app.post("/api/contact", async (req, res) => {
