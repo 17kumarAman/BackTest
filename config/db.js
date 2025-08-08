@@ -2,6 +2,7 @@
 import dotenv from "dotenv";
 import mysql from "mysql2";
 dotenv.config();
+const caCert = Buffer.from(process.env.AIVEN_CA_CERT_BASE64, 'base64').toString();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -13,7 +14,8 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
   ssl: {
-    rejectUnauthorized: false,
+    ca: caCert,
+    // rejectUnauthorized: false // remove this line in production
   },
 });
 
